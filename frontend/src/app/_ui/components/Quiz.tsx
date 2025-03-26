@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { fetchQuizQuestions } from "../utils/fetchQuestions"; // Import the utility function
-import { Button } from "@/app/_ui/components/Button";
+import { Button } from "./Button";
 import { OptionList } from "./OptionList";
 import { formatTime } from "../utils/formatTime";
 import { useRouter } from "next/navigation";

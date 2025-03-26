@@ -1,6 +1,6 @@
 import Image from "next/image";
-import { CheckCircle } from "@/ui/icons/CheckCircle";
-import { importantToKnow } from "@/ui/content/content";
+import { CheckCircle } from "../icons/CheckCircle";
+import { importantToKnow } from "../content/content";
 import { Button } from "./Button";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";

@@ -28,12 +28,12 @@
         "./src/*"
       ],
       "@/ui/*": [
-        "./src/app/_ui/*"
+        "frontend/app/_ui/*"
       ]
     }
   },
   "include": [
-    "next-env.d.ts",
+    "frontend/next-env.d.ts",
     "**/*.ts",
     "**/*.tsx",
     ".next/types/**/*.ts",

@@ -28,10 +28,10 @@ const AdminSchema = new mongoose.Schema({
   }
 });
 
-// Remove all indexes first
-AdminSchema.indexes().forEach(index => {
-  AdminSchema.index(index[0], { background: true });
-});
+// // Remove all indexes first
+// AdminSchema.indexes().forEach(index => {
+//   AdminSchema.index(index[0], { background: true });
+// });
 
 // Hash password before saving
 AdminSchema.pre("save", async function(next) {

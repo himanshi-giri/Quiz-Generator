@@ -2,10 +2,10 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { AnimatePresence } from "framer-motion";
-import { Countdown } from "@/ui/components/Countdown";
-import { Intro } from "@/ui/components/Intro";
-import { Quiz } from "@/ui/components/Quiz";
-import { SubjectSelect } from "@/ui/components/SubjectSelect";
+import { Countdown } from "./_ui/components/Countdown";
+import { Intro } from "./_ui/components/Intro";
+import { Quiz } from "./_ui/components/Quiz";
+import { SubjectSelect } from "./_ui/components/SubjectSelect";
 import { authAPI } from "./_ui/utils/apiUtils"; // Assuming authAPI is defined in this file
 import axios from "axios";
 

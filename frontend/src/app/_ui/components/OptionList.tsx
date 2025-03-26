@@ -1,4 +1,4 @@
-import { Tick, Close } from "@/ui/icons/index";
+import { Tick, Close } from "../icons/index";
 interface OptionListProps {
   options: string[];
   isCorrectAnswer: boolean;

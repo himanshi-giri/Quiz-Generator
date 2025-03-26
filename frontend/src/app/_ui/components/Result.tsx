@@ -2,11 +2,11 @@
 import { useState, useEffect } from "react";
 import Lottie from "lottie-react";
 import { motion } from "framer-motion";
-import { Button } from "@/app/_ui/components/Button";
+import { Button } from "./Button";
 import { authAPI } from "../utils/apiUtils";
 import { useRouter } from "next/navigation";
 
-import confettiAnimation from "@/ui/assets/animations/confetti.json";
+import confettiAnimation from "../assets/animations/confetti.json";
 import { DonutChart } from "./DonutChart";
 
 interface QuizHistoryItem {
