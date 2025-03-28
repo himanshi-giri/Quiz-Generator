@@ -15,7 +15,7 @@ export const fetchQuizQuestions = async (subject: string, difficulty: string, to
     }
 
     const response = await axios.post(
-      "http://localhost:5000/api/quiz/generate", 
+      "https://quizgeneratorbackend.vercel.app/api/quiz/generate", 
       { subject, topic, difficulty, numQuestions: 15 },
       {
         headers: {

@@ -28,7 +28,7 @@
         "./src/*"
       ],
       "@/ui/*": [
-        "frontend/app/_ui/*"
+        "./src/app/_ui/*"
       ]
     }
   },
