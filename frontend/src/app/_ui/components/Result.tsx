@@ -78,9 +78,7 @@ export const Result = ({ results, totalQuestions, topic, subject, testCode }: Re
 
   const handleRetry = () => {
     // Restart quiz
-    if (typeof window !== "undefined") {
-      window.location.reload();
-    }
+    window.location.reload();
   };
 
   const handleViewReportCard = () => {

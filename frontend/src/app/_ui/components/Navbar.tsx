@@ -1,5 +1,3 @@
-
-
 "use client";
 
 import { useState, useEffect } from "react";
@@ -14,29 +12,28 @@ interface ExtendedUser extends User {
 
 export const Navbar = () => {
   const router = useRouter();
-  const pathname = usePathname(); // ✅ Hook must be at the top
+  const pathname = usePathname();
 
   // List of paths where navbar should not appear
   const hiddenPaths = ["/login", "/signup", "/admin/login"];
 
-  // State for user (ensure it runs only on client-side)
-  const [user, setUser] = useState<ExtendedUser | null>(null);
+  // Get the current user immediately to prevent flickering
+  const [user, setUser] = useState<ExtendedUser | null>(() => getCurrentUser());
 
   useEffect(() => {
-    if (typeof window !== "undefined") {
-      setUser(getCurrentUser()); // ✅ Ensure this runs only on the client
+    // Ensure the user state is updated on component mount
+    setUser(getCurrentUser());
 
-      // Listen for custom login event
-      const handleLogin = (event: CustomEvent) => {
-        setUser(event.detail);
-      };
+    // Listen for custom login event
+    const handleLogin = (event: CustomEvent) => {
+      setUser(event.detail);
+    };
 
-      window.addEventListener("userLogin", handleLogin as EventListener);
+    window.addEventListener('userLogin', handleLogin as EventListener);
 
-      return () => {
-        window.removeEventListener("userLogin", handleLogin as EventListener);
-      };
-    }
+    return () => {
+      window.removeEventListener('userLogin', handleLogin as EventListener);
+    };
   }, []);
 
   const handleLogout = () => {
@@ -45,7 +42,7 @@ export const Navbar = () => {
     router.push("/login");
   };
 
-  // ✅ Move pathname check to ensure hooks are not inside condition
+  // Don't render navbar for admin, non-logged-in users, or on login/signup pages
   if (!user || user.isAdmin || hiddenPaths.includes(pathname)) {
     return null;
   }

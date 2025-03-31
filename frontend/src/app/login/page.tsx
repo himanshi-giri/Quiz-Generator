@@ -1,6 +1,5 @@
 "use client";
-
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { authAPI } from "../_ui/utils/apiUtils";
@@ -11,13 +10,6 @@ export default function LoginPage() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const router = useRouter();
-
-  // Function to safely access localStorage
-  const setLocalStorage = (key: string, value: string) => {
-    if (typeof window !== "undefined") {
-      localStorage.setItem(key, value);
-    }
-  };
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -30,28 +22,25 @@ export default function LoginPage() {
       const response = await authAPI.login({ identifier, password });
       console.log("Login successful");
 
-      // Store token and user info safely in localStorage (only on client-side)
-      setLocalStorage("token", response.token);
-      setLocalStorage("username", response.username);
-      setLocalStorage("userId", response.userId);
-      setLocalStorage("isAdmin", "false"); // Explicitly set isAdmin to false for regular users
-
+      // Store token and user info in localStorage
+      localStorage.setItem("token", response.token);
+      localStorage.setItem("username", response.username);
+      localStorage.setItem("userId", response.userId);
+      localStorage.setItem("isAdmin", "false"); // Explicitly set isAdmin to false for regular users
       if (response.email) {
-        setLocalStorage("email", response.email);
+        localStorage.setItem("email", response.email);
       }
 
-      // Dispatch event only if window is available
-      if (typeof window !== "undefined") {
-        const loginEvent = new CustomEvent("userLogin", {
-          detail: {
-            username: response.username,
-            email: response.email,
-            userId: response.userId,
-            isAdmin: false,
-          },
-        });
-        window.dispatchEvent(loginEvent);
-      }
+      // Create a custom event with user data
+      const loginEvent = new CustomEvent("userLogin", {
+        detail: {
+          username: response.username,
+          email: response.email,
+          userId: response.userId,
+          isAdmin: false
+        }
+      });
+      window.dispatchEvent(loginEvent);
 
       // Redirect to home page
       router.push("/");

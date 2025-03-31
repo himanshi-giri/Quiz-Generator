@@ -1,15 +1,11 @@
 const playSound = (sound: string) => {
-  if (typeof window === "undefined") return; // Prevents errors in SSR
-  
   const audio = new Audio(`/sounds/${sound}`);
   audio.play();
 
   // If page changes, stop playing sound
-  if (window.addEventListener) {
-    window.addEventListener("beforeunload", () => {
-      audio.pause();
-    });
-  }
+  window.addEventListener("beforeunload", () => {
+    audio.pause();
+  });
 };
 
 export const playCorrectAnswer = () => {

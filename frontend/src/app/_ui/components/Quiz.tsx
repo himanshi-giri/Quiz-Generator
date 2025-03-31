@@ -84,7 +84,7 @@ export const Quiz = ({
             }
             
             const response = await axios.post(
-              "http://localhost:5000/api/quiz/generate",
+              "https://quizgeneratorbackend.vercel.app/api/quiz/generate",
               {
                 subject: selectedSubject,
                 difficulty: selectedLevel,
