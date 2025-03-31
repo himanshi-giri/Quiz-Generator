@@ -36,7 +36,11 @@ export default function RootLayout({
                   handleResize();
                   return handleResize;
               }
-              window.addEventListener('resize', setViewportProperty(document.documentElement));
+              
+              // Only run in browser environment
+              if (typeof window !== 'undefined' && typeof document !== 'undefined') {
+                  window.addEventListener('resize', setViewportProperty(document.documentElement));
+              }
           `}
         </Script>
         <Navbar />
