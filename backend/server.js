@@ -5,6 +5,7 @@ const connectDB = require("./config/db");
 const quizRoutes = require("./routes/quizRoutes");
 const authRoutes = require("./routes/authRoutes");
 const adminRoutes = require("./routes/adminRoutes");
+const teachRoutes = require('./routes/teachRoutes');
 const { verifyToken } = require("./middleware/authMiddleware");
 
 const app = express();
@@ -76,6 +77,7 @@ app.get("/", (req, res) => {
 app.use("/api/auth", authRoutes);
 app.use("/api/admin", adminRoutes);
 app.use("/api/quiz", verifyToken, quizRoutes);
+app.use('/api', teachRoutes);
 
 // Error handling middleware
 app.use((err, req, res, next) => {
