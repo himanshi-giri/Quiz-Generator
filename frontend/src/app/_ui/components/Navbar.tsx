@@ -17,22 +17,21 @@ export const Navbar = () => {
   // List of paths where navbar should not appear
   const hiddenPaths = ["/login", "/signup", "/admin/login"];
 
-  // Get the current user immediately to prevent flickering
+  // Get current user immediately to prevent flickering
   const [user, setUser] = useState<ExtendedUser | null>(() => getCurrentUser());
 
   useEffect(() => {
-    // Ensure the user state is updated on component mount
     setUser(getCurrentUser());
 
-    // Listen for custom login event
-    const handleLogin = (event: CustomEvent) => {
-      setUser(event.detail);
+    const handleLogin = (event: Event) => {
+      const customEvent = event as CustomEvent<ExtendedUser>;
+      setUser(customEvent.detail);
     };
 
-    window.addEventListener('userLogin', handleLogin as EventListener);
+    window.addEventListener("userLogin", handleLogin);
 
     return () => {
-      window.removeEventListener('userLogin', handleLogin as EventListener);
+      window.removeEventListener("userLogin", handleLogin);
     };
   }, []);
 
@@ -42,7 +41,6 @@ export const Navbar = () => {
     router.push("/login");
   };
 
-  // Don't render navbar for admin, non-logged-in users, or on login/signup pages
   if (!user || user.isAdmin || hiddenPaths.includes(pathname)) {
     return null;
   }
@@ -53,7 +51,9 @@ export const Navbar = () => {
         <div className="flex items-center space-x-4">
           <div className="flex flex-col items-end">
             <span className="font-semibold text-white">{user.username}</span>
-            {user.email && <span className="text-xs text-gray-200">{user.email}</span>}
+            {user.email && (
+              <span className="text-xs text-gray-200">{user.email}</span>
+            )}
           </div>
           <Button intent="primary" size="small" onClick={() => router.push("/report-card")}>
             Report Card

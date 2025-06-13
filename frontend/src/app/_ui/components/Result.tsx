@@ -1,4 +1,5 @@
 "use client";
+
 import { useState, useEffect } from "react";
 import Lottie from "lottie-react";
 import { motion } from "framer-motion";
@@ -9,15 +10,7 @@ import { useRouter } from "next/navigation";
 import confettiAnimation from "../assets/animations/confetti.json";
 import { DonutChart } from "./DonutChart";
 
-interface QuizHistoryItem {
-  quizId: string;
-  topic: string;
-  score: number;
-  totalQuestions: number;
-  date: string;
-}
-
-interface ResultProps {  
+interface ResultProps {
   results: {
     correctAnswers: number;
     wrongAnswers: number;
@@ -34,73 +27,44 @@ export const Result = ({ results, totalQuestions, topic, subject, testCode }: Re
   const [error, setError] = useState("");
   const [resultSaved, setResultSaved] = useState(false);
   const router = useRouter();
-  
-  // Calculate score percentage for progress bar
+
   const scorePercentage = Math.round((correctAnswers / totalQuestions) * 100);
   const timePercentage = Math.round((secondsUsed / (60 * totalQuestions)) * 100);
 
   useEffect(() => {
-    // Save the current quiz result
     const saveQuizResult = async () => {
       try {
-        setError("");  // Clear any previous errors
-        
         if (!resultSaved) {
-          // Generate a test code if not provided
           const quizTestCode = testCode || Math.random().toString(36).substr(2, 9);
-          
-          console.log("Saving quiz result with test code:", quizTestCode);
-          const response = await authAPI.saveQuizResult({
+          await authAPI.saveQuizResult({
             subject,
             topic,
             score: correctAnswers,
             totalQuestions,
             timeTaken: secondsUsed,
-            testCode: quizTestCode
+            testCode: quizTestCode,
           });
-          
-          console.log("Quiz result saved successfully:", response);
           setResultSaved(true);
         }
       } catch (err: any) {
-        console.error("Error in quiz result handling:", err);
-        console.error("Error details:", {
-          message: err.message,
-          response: err.response?.data,
-          status: err.response?.status
-        });
-        setError(err.response?.data?.error || "Failed to handle quiz result. Please try again later.");
+        setError(
+          err?.response?.data?.error || "Failed to save quiz result. Please try again."
+        );
+        console.error("Save result error:", err);
       }
     };
 
     saveQuizResult();
-  }, []); // Only run once when component mounts
+  }, [correctAnswers, resultSaved, secondsUsed, subject, testCode, topic, totalQuestions]);
 
   const handleRetry = () => {
-    // Restart quiz
     window.location.reload();
   };
 
   const handleViewReportCard = () => {
-    router.push('/report-card');
+    router.push("/report-card");
   };
 
-  const formatDate = (dateString: string) => {
-    const date = new Date(dateString);
-    return date.toLocaleDateString('en-US', { 
-      year: 'numeric', 
-      month: 'short', 
-      day: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit'
-    });
-  };
-
-  const calculateAverageScore = () => {
-    return 0;
-  };
-
-  // Get feedback based on score
   const getFeedback = () => {
     if (scorePercentage >= 80) return "Excellent work!";
     if (scorePercentage >= 60) return "Good job!";
@@ -110,72 +74,42 @@ export const Result = ({ results, totalQuestions, topic, subject, testCode }: Re
 
   return (
     <motion.div
-      key={"result"}
-      variants={{
-        initial: {
-          background: "linear-gradient(135deg, #FF6A66 0%, #FF9A8B 100%)",
-          clipPath: "circle(0% at 50% 50%)",
-        },
-        animate: {
-          background: "linear-gradient(135deg, #FF6A66 0%, #FF9A8B 100%)",
-          clipPath: "circle(100% at 50% 50%)",
-        },
-      }}
+      key="result"
       className="w-full h-full flex justify-center p-5 overflow-y-auto"
-      initial="initial"
-      animate="animate"
-      exit="exit"
+      initial={{ clipPath: "circle(0% at 50% 50%)" }}
+      animate={{ clipPath: "circle(100% at 50% 50%)" }}
       transition={{ duration: 0.5 }}
+      style={{
+        background: "linear-gradient(135deg, #FF6A66 0%, #FF9A8B 100%)",
+      }}
     >
       <div className="flex flex-col text-black font-bold text-center w-full max-w-2xl mx-auto">
         <div className="bg-white/20 backdrop-blur-sm py-3 px-4 rounded-xl">
           <h1 className="font-bold text-xl text-white">Daily Practice Paper Test Results</h1>
         </div>
 
-        {/* Current Result Box */}
         <div className="mt-6 flex-1 bg-white border border-brand-light-gray rounded-2xl shadow-lg flex flex-col items-center py-7 px-4">
           <div className="relative">
             <Lottie
               animationData={confettiAnimation}
               loop={false}
-              autoplay={true}
+              autoplay
               style={{ width: "170px", height: "170px" }}
             />
             <div className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 bg-blue-100 text-blue-800 text-xs font-semibold px-3 py-1 rounded-full">
               {topic}
             </div>
           </div>
-          
-          <h3 className="text-brand-midnight text-3xl font-bold mt-4">
-            {getFeedback()}
-          </h3>
-          
-          {/* <div className="mt-6 w-full px-4">
-            <div className="flex justify-between items-center mb-1">
-              <span className="text-lg font-medium text-gray-700">Score</span>
-              <span className="text-lg font-medium text-gray-700">{scorePercentage}%</span>
-            </div>
-            <div className="w-full bg-gray-200 rounded-full h-3">
-              <div 
-                className={`h-3 rounded-full ${
-                  scorePercentage >= 70 ? 'bg-green-500' : 
-                  scorePercentage >= 40 ? 'bg-yellow-500' : 'bg-red-500'
-                }`} 
-                style={{ width: `${scorePercentage}%` }}
-              ></div>
-            </div>
-            <p className="text-center text-3xl font-bold text-gray-800 mt-3">{correctAnswers}/{totalQuestions}</p>
-            <p className="text-center text-sm font-normal text-gray-500">correct answers</p>
-          </div> */}
 
-          {/* Charts */}
+          <h3 className="text-brand-midnight text-3xl font-bold mt-4">{getFeedback()}</h3>
+
           <div className="flex flex-wrap items-center justify-center mt-6 gap-6">
             <div className="flex flex-col items-center">
               <DonutChart
                 className="w-32 h-32"
                 total={60 * totalQuestions}
                 used={secondsUsed}
-                type={"time"}
+                type="time"
                 data={[
                   {
                     label: "Time Used",
@@ -198,7 +132,7 @@ export const Result = ({ results, totalQuestions, topic, subject, testCode }: Re
             <div className="flex flex-col items-center">
               <DonutChart
                 className="w-32 h-32"
-                type={"questions"}
+                type="questions"
                 total={totalQuestions}
                 used={correctAnswers}
                 data={[
@@ -216,15 +150,15 @@ export const Result = ({ results, totalQuestions, topic, subject, testCode }: Re
               />
               <div className="mt-2 text-center">
                 <p className="text-sm font-semibold text-gray-700">Questions</p>
-                <p className="text-xs text-gray-500">{correctAnswers} correct, {wrongAnswers} wrong</p>
+                <p className="text-xs text-gray-500">
+                  {correctAnswers} correct, {wrongAnswers} wrong
+                </p>
               </div>
             </div>
           </div>
         </div>
 
-        {/* Action Buttons Container */}
         <div className="mt-6 grid gap-3">
-          {/* View Full Report Card Button */}
           <Button
             intent="primary"
             size="medium"
@@ -239,7 +173,6 @@ export const Result = ({ results, totalQuestions, topic, subject, testCode }: Re
             View Full Report Card
           </Button>
 
-          {/* Try Again Button */}
           <Button
             intent="primary"
             size="medium"
