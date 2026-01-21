@@ -1,8 +1,5 @@
 A quiz app with a countdown timer and a list of questions.
 
-## See in Action
-
-- [Demo](https://quizapp-gray-nine.vercel.app/)
 
 ## Technologies Used
 
